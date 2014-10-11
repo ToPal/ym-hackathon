@@ -1,13 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YM-test</title>
+  <title>Здоровое питание</title>
+  <link rel="stylesheet/less" type="text/css" href="less/index.less" />
+  
   <script type="text/javascript" src="js/jquery.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/less.js"></script>
 </head>
 <body>
+  <div class="user-params">
+    Возраст: <input type="number" name="age" id="age" value="25" /><br>
+    Рост (см): <input type="number" name="height" id="height" value="180" /><br>
+    Масса (кг): <input type="number" name="weight" id="weight" value="80" /><br>
+    Пол: <span><input type="radio" name="sex" value="male" checked/>Мужской</span>
+    <span><input type="radio" name="sex" value="female"/>Женский</span><br>
+    Активность: <input type="range" name="activity" value="1.4" min="1.2" max="1.9" step="0.01" /><br>
+    <button class="accept">Сохранить</button>
+  </div>
+  
+  <div class="dayRation">
+    <div class="portion breakfast_one">
+      <span class="title">Завтрак</span>
+      <div class="products">
+        
+      </div>
+      <div class="add"></div>
+      <div class="variants"></div>
+    </div>
+    
+    <div class="portion breakfast_two">
+      <span class="title">Второй завтрак</span>
+      <div class="products">
+        
+      </div>
+      <div class="add"></div>
+      <div class="variants"></div>
+    </div>
+    
+    <div class="portion lunch">
+      <span class="title">Обед</span>
+      <div class="products">
+        
+      </div>
+      <div class="add"></div>
+      <div class="variants"></div>
+    </div>
+    
+    <div class="portion dinner">
+      <span class="title">Ужин</span>
+      <div class="products">
+        
+      </div>
+      <div class="add"></div>
+      <div class="variants"></div>
+    </div>
+  </div>
   <form action='https://sp-money.yandex.ru/oauth/authorize'>
+    
+    %кнопка "купить"%
+    
     <input type="hidden" name="client_id" value="3C8EB4377C987BA354A59F09A066375AEF4203E02EEDBFFB5B527EF99D1D7606"/>
     <input type="hidden" name="response_type" value="code"/>
     <input type="hidden" name="redirect_uri" value="http://portion.cloudapp.net:8080/ym-result"/>
@@ -16,5 +68,9 @@
     <input class="auth btn" type="submit">Авторизация</input>
   </form>
   <div class="status"> </div>
+  <div class="product template">
+    <span class="name"></span>, <span class="weight"></span> г.
+    <div class="remove"></div>
+  </div>
 </body>
 </html>

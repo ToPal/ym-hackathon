@@ -4,7 +4,8 @@
  */
 
 var express = require('express')
-  , routes = require('./routes');
+  , routes = require('./routes')
+  , models = require("./models");
 
 var app = module.exports = express.createServer();
 
@@ -35,11 +36,18 @@ app.configure('production', function(){
 app.use("/less", express.static(__dirname + '/views/less'));
 app.use("/js", express.static(__dirname + '/views/js'));
 app.use("/img", express.static(__dirname + '/views/img'));
+app.use("/fonts", express.static(__dirname + '/views/fonts'));
 
-// страница для получателей платежей
+app.get('/*', require("./sessions"));
+app.post('/*', require("./sessions"));
+
+// страница для получения списка продуктов
 app.get('/', routes.index);
 // страница для плательщиков
 app.get('/payment', routes.payment);
+// регистрация
+app.get('/register', models.initUsersDB(),  routes.register);
+app.post('/register', models.initUsersDB(),  routes.register);
 // страница для обработки результатов платежа
 app.get('/ym-result', routes.ymAuthResult)
 

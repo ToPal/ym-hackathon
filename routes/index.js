@@ -1,27 +1,35 @@
 var ym = require("./../ym-sdk");
 
-exports.index = function(req, res){
-    if (req.session.ssid === undefined) {
-        req.session.ssid = Date.now();
-    }
-    
-    if (req.session.auth_code !== undefined) {
-        ym.getOperationsHistory(req.session.token, 3, function(body) {
-            console.log('body: ' + JSON.stringify(body));
-        });
-        
-        return res.render('authorized', {
-            auth_code: req.session.auth_code, 
-            token: req.session.token,
-            layout: false
-        });
-    } else {
-        return res.render('index', { layout: false })
-    }
+exports.index = function(req, res) {
+    return res.render('index', { layout: false })
 };
 
 exports.payment = function(req, res, next) {
     
+}
+
+exports.register = function(req, res, next) {
+    if (req.session.isAuth()) {
+        return res.redirect('/');
+    }
+    
+    if ((req.param('name') !== undefined) && (req.param('pass') !== undefined)) {
+        return req.models.user.create({
+            name: req.param('name'),
+            pass: req.param('pass')
+        }, function(err, result) {
+            if (err) { 
+                console.log(err);
+                return res.redirect('/register');
+            }
+            
+            req.session.userid = result.id;
+            req.session.user = result;
+            return res.redirect('/');
+        });
+    }
+    
+    return res.render('register', {layout: false})
 }
 
 exports.ymAuthResult = function(req, res, next) {
