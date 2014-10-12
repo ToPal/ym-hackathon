@@ -149,7 +149,16 @@ products.prototype.updateProductsWeight = function(callback) {
     mealParameters: userParams[this.name]
   }, function(res) {
     if ((res.commandResult === undefined) || (res.commandResult.length === undefined) || (res.commandResult.length === 0)) {
-      return that.containter().addClass('inappropriate');
+      for (var i in that.products) {
+        that.products[i].weight = 0;
+      }
+      that.containter().addClass('inappropriate');
+      
+      if (callback !== undefined) {
+        callback();
+      }
+      
+      return;
     }
     
     for (var i in res.commandResult) {
@@ -186,6 +195,14 @@ dayRation.updateProductsWeight = function(callback) {
       });
     });
   }
+}
+dayRation.getProducts = function() {
+  var res = [];
+  res = res.concat(dayRation.breakfast_one.products);
+  res = res.concat(dayRation.breakfast_two.products);
+  res = res.concat(dayRation.lunch.products);
+  res = res.concat(dayRation.dinner.products);
+  return res;
 }
 
 function doPost(address, params, callback) {
@@ -392,6 +409,19 @@ sellers.setActive = function(i) {
   sellers.container().find('.seller.active').removeClass('active');
   $(sellers.container().find('.seller')[i]).addClass('active');
 }
+sellers.update = function(callback) {
+  doPost('/getSellers', {
+    products: dayRation.getProducts()
+  }, function(msg) {
+      if ((msg.sellers !== undefined) && (msg.sellers.length !== undefined)) {
+        sellers.sellers = msg.sellers;
+      }
+      
+      if (callback !== undefined) {
+        callback();
+      }
+  });
+}
 sellers.show = function() {
   var clickFunction = function(i) {
     return function(e) {
@@ -447,23 +477,19 @@ $(document).ready(function() {
       searchResults.search($('.search')[0].value, true);
   });
   $('.order-btn').click(function(e) {
+    sellers.update(function() {
       buyWindow.show();
+    });
   });
   buyWindow.container().click(function(e) {
       if (e.target !== buyWindow.container()[0]) { return true; }
       buyWindow.hide();
   });
-  sellers.sellers = [{
-    name: "Пятерочка",
-    address: "пискаревский проспект, 18",
-    price: 545
-  }, {
-    name: "Ламантин",
-    address: 'Пискаревский проспект, д.2к"Щ"',
-    price: 763
-  }, {
-    name: "Casual Cafe",
-    address: 'Пискаревский проспект, д.2к"Щ"',
-    price: 698
-  }];
+  buyWindow.container().find('form input[type=button]').click(function(e) {
+    doPost('/selectSeller', {
+      id: sellers.sellers[sellers.active].id
+    }, function(msg) {
+      buyWindow.container().find('form')[0].submit();
+    });
+  });
 });

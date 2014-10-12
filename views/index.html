@@ -83,12 +83,12 @@
     <div class="buy">
       <form action='https://sp-money.yandex.ru/oauth/authorize'>
       
-        <input type="hidden" name="client_id" value="3C8EB4377C987BA354A59F09A066375AEF4203E02EEDBFFB5B527EF99D1D7606"/>
+        <input type="hidden" name="client_id" value="8BED8D8E7C744179D710516ED284B1C06D396FEBED52710A2E63A249526F0B11"/>
         <input type="hidden" name="response_type" value="code"/>
-        <input type="hidden" name="redirect_uri" value="http://portion.cloudapp.net:8080/ym-result"/>
-        <input type="hidden" name="scope" value="operation-history"/>
+        <input type="hidden" name="redirect_uri" value="http://spbhack.ru/ym"/>
+        <input type="hidden" name="scope" value="payment-p2p"/>
         
-        <input class="auth btn" type="submit" value="Купить" />
+        <input class="auth btn" type="button" value="Купить" />
       </form>
       
       <div class="sellers">
@@ -110,5 +110,34 @@
     <div class="address"></div>
     <div class="price-containter"><span class="price"></span> руб.</div>
   </div>
+  
+  
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function (d, w, c) {
+    (w[c] = w[c] || []).push(function() {
+        try {
+            w.yaCounter26595909 = new Ya.Metrika({id:26595909,
+                    webvisor:true,
+                    clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true});
+        } catch(e) { }
+    });
+
+    var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+    s.type = "text/javascript";
+    s.async = true;
+    s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+    if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+    } else { f(); }
+})(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript><div><img src="//mc.yandex.ru/watch/26595909" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 </body>
 </html>
