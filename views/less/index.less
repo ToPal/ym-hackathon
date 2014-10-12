@@ -20,8 +20,43 @@
 .user-params {
   float: right;
   padding: 2em;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
   border-radius: 2em;
+  
+  .inputs {
+    text-align: right;
+    margin-bottom: 0.5em;
+  }
+  
+  input {
+    vertical-align: middle;
+    margin-bottom: 0.5em;
+  }
+  
+  input[type=number] {
+    padding: 0.2em;
+    margin: 0.1em;
+    vertical-align: middle;
+    border-radius: 0.2em;
+    border: 1px solid rgba(0, 0, 0, 0.43);
+  }
+  
+  .accept-container {
+    text-align: center;
+    margin-top: 0.5em;
+  }
+  
+  .accept {
+    padding: 0.5em 2em;
+    background-color: #76B836;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 5px rgba(0, 0, 0, 0.25);
+    color: white;
+    font-size: 0.9em;
+    font-weight: bolder;
+    cursor: pointer;
+    border: 0;
+  }
 }
 
 body {
@@ -39,6 +74,10 @@ body {
   width: 60%;
   padding: 10px 50px;
   border-radius: 2em;
+}
+
+.template {
+    display: none;
 }
 
 .portion {
@@ -64,6 +103,7 @@ body {
     width: 2em;
     float: right;
     margin-right: 1em;
+    cursor: pointer;
 }
 
 .product .remove {
@@ -73,4 +113,135 @@ body {
     display: inline-block;
     height: 0.8em;
     width: 0.8em;
+    cursor: pointer;
+}
+
+.add-product-containter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+}
+
+.add-product {
+    position: fixed;
+    margin-left: 7%;
+    top: 5%;
+    width: 80%;
+    height: 80%;
+    padding: 2em;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.33);
+    border-radius: 0.5em;
+}
+
+.searchButton {
+    float: right;
+    padding: 0.5em 3em;
+    background-color: rgb(255, 112, 0);
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 5px rgba(0,0,0,.25);
+    color: white;
+    font-size: 1em;
+    font-weight: bolder;
+    cursor: pointer;
+    border: 0;
+}
+
+.add-product label {
+    float: left;
+    line-height: 2em;
+}
+
+.searchParent {
+    margin-left: 8em;
+    margin-right: 10em;
+    padding: 0.3em 0;
+}
+
+.search {
+    width: 100%;
+    border-radius: 2px;
+    border: 1px solid #ffd380;
+    height: 2em;
+}
+
+.add-product .title {
+    font-weight: bold;
+    font-size: 150%;
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+@orange: rgb(255, 168, 0);
+@suggestion-chart-border-radius: 3px;
+
+.autocomplete-suggestions {
+    border: 1px solid #ffd380;
+    border-top: none;
+    border-radius: 3px;
+}
+
+.autocomplete-suggestion {
+    background-color: white;
+    border: 1px solid whitesmoke;
+    padding: 0.5em;
+    height: 1em;
+}
+
+.autocomplete-suggestion:hover {
+    background-color: lighten(@orange, 20);
+    cursor: pointer;
+}
+
+.autocomplete-suggestion-text {
+    width: 50%;
+    float: left;
+    overflow: hidden;
+    height: 100%;
+}
+
+.autocomplete-suggestion-chart {
+    background-color: #FF8153;
+    height: 1.4em;
+    clear: both;
+    float: right;
+    margin-top: -0.2em;
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: @suggestion-chart-border-radius;
+}
+
+.autocomplete-suggestion-chart-proteins {
+    background-color: #878BB6;
+    height: 100%;
+    float: left;
+    border-radius: @suggestion-chart-border-radius 0 0 @suggestion-chart-border-radius;
+}
+
+.autocomplete-suggestion-chart-fats {
+    height: 100%;
+    background-color: #4ACAB4;
+    float: left;
+}
+
+.searchResult {
+    padding: 0.5em;
+    margin: 0.5em;
+    border: 1px dashed black;
+    border-radius: 1em;
+}
+
+.searchResult:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.nextSearch {
+    border-bottom: 1px dashed;
+    float: right;
+    cursor: pointer;
+    display: none;
 }

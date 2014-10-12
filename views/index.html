@@ -5,18 +5,23 @@
   <link rel="stylesheet/less" type="text/css" href="less/index.less" />
   
   <script type="text/javascript" src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
   <script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/less.js"></script>
 </head>
 <body>
   <div class="user-params">
-    Возраст: <input type="number" name="age" id="age" value="25" /><br>
-    Рост (см): <input type="number" name="height" id="height" value="180" /><br>
-    Масса (кг): <input type="number" name="weight" id="weight" value="80" /><br>
-    Пол: <span><input type="radio" name="sex" value="male" checked/>Мужской</span>
-    <span><input type="radio" name="sex" value="female"/>Женский</span><br>
+    <div class="inputs">
+      Возраст: <input type="number" name="age" id="age" value="25" /><br>
+      Рост (см): <input type="number" name="height" id="height" value="180" /><br>
+      Масса (кг): <input type="number" name="weight" id="weight" value="80" /><br>
+    </div>
+    Пол: <label for="radio-male"><input id="radio-male" type="radio" name="sex" value="male" checked/>Мужской</label>
+    <label for="radio-female"><input id="radio-female" type="radio" name="sex" value="female"/>Женский</label><br>
     Активность: <input type="range" name="activity" value="1.4" min="1.2" max="1.9" step="0.01" /><br>
-    <button class="accept">Сохранить</button>
+    <div class="accept-container">
+      <button class="accept">Сохранить</button>
+    </div>
   </div>
   
   <div class="dayRation">
@@ -56,6 +61,18 @@
       <div class="variants"></div>
     </div>
   </div>
+  
+  <div class="add-product-containter">
+    <div class="add-product">
+      <div class="title">Завтрак</div>
+      <div class="searchButton">Поиск</div>
+      <label for="search">Введите блюдо: </label>
+      <div class="searchParent"><input type="search" class="search" id="search" /></div>
+      <div id="searchResults" class="searchResults"></div>
+      <div class="nextSearch">Далее</div>
+    </div>
+  </div>
+  
   <form action='https://sp-money.yandex.ru/oauth/authorize'>
     
     %кнопка "купить"%
@@ -71,6 +88,9 @@
   <div class="product template">
     <span class="name"></span>, <span class="weight"></span> г.
     <div class="remove"></div>
+  </div>
+  <div class="searchResult template">
+    <span class="name"></span>
   </div>
 </body>
 </html>

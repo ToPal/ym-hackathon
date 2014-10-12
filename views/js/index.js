@@ -43,6 +43,16 @@ userParams.update = function() {
   }
   userParams.activity = $('.user-params [name=activity]')[0].value;
 }
+userParams.save = function(callback) {
+  userParams.update();
+  userParams.updateCaloric(function() {
+    userParams.getMealsParams(function() {
+      if (callback !== undefined) {
+        callback();
+      }
+    });
+  });
+}
 userParams.updateCaloric = function(callback) {
   doPost('http://portion.su:8080/api/', {
     command: 'getOptimalCaloric',
@@ -59,7 +69,7 @@ userParams.updateCaloric = function(callback) {
     }
   });
 }
-userParams.getMealsParams = function() {
+userParams.getMealsParams = function(callback) {
   doPost('http://portion.su:8080/api/', {
     command: 'getMealsParameters',
     caloric: userParams.caloric
@@ -68,12 +78,21 @@ userParams.getMealsParams = function() {
     userParams.breakfast_two = res.meals[1];
     userParams.lunch = res.meals[2];
     userParams.dinner = res.meals[3];
+    
+    if (callback !== undefined) {
+      callback();
+    }
   });
 }
 
 var products = function(name, products) {
   this.name = name;
   this.products = products || [];
+  
+  var that = this;
+  this.containter().find('.add').click(function() {
+    addProductWindow.show(that.name);
+  });
 }
 products.prototype.containter = function() {
   return $('.portion.' + this.name);
@@ -117,6 +136,11 @@ products.prototype.show = function() {
 products.prototype.setProducts = function(newProducts) {
   this.products = newProducts;
 }
+products.prototype.addProduct = function(product) {
+  this.products.push(product);
+  this.updateProductsWeight();
+  this.show();
+}
 products.prototype.updateProductsWeight = function(callback) {
   var that = this;
   doPost('http://portion.su:8080/api/', {
@@ -143,6 +167,9 @@ dayRation.show = function() {
   dayRation.breakfast_two.show();
   dayRation.lunch.show();
   dayRation.dinner.show();
+}
+dayRation.getTitle = function(meal) {
+  return dayRation[meal].containter().find('.title').html();
 }
 dayRation.updateProductsWeight = function(callback) {
   if (callback === undefined) {
@@ -182,9 +209,154 @@ function doPost(address, params, callback) {
     });
 }
 
+var addProductWindow = { meal: 'breakfast_one' };
+addProductWindow.containter = function() {
+  return $('.add-product-containter');
+}
+addProductWindow.show = function(meal) {
+  addProductWindow.meal = meal;
+  addProductWindow.containter().find('.title').html(dayRation.getTitle(addProductWindow.meal));
+  searchResults.results = [];
+  searchResults.clear();
+  addProductWindow.containter().show();
+}
+addProductWindow.hide = function() {
+  addProductWindow.containter().hide();
+}
+addProductWindow.addProduct = function(product) {
+  dayRation[addProductWindow.meal].addProduct(product);
+  addProductWindow.hide();
+}
+
 function setStatus(text) {
   console.log(text);
   $('.status').html(text);
+}
+
+function setAutocomplete() {
+  $('#search').autocomplete({
+    serviceUrl: 'http://portion.su:8080/api',
+    params: {
+      command: "getFilteredProducts",
+      limit: 5
+    },
+    paramName: 'text',
+    type: 'POST',
+    ajaxSettings: {
+        dataType: "json"
+    },
+    transformResult: function (msg) {
+        var res = [];
+        for (var i in msg.filteredProducts) {
+            res.push({
+                value: msg.filteredProducts[i].name,
+                data: msg.filteredProducts[i]
+            });
+        }
+        return { suggestions: res };
+    },
+    formatResult: function (suggestion, currentValue) {
+        function escapeRegExChars (value) {
+            return value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        }
+        
+        var pattern = '(' + escapeRegExChars(currentValue) + ')';
+        
+        var chartWidth = suggestion.data.caloric / 500 * 49;
+        var sum = suggestion.data.proteins + suggestion.data.fats + suggestion.data.carbohydrates;
+        var proteinsWidth = suggestion.data.proteins / sum * 100;
+        var fatsWidth = suggestion.data.fats / sum * 100;
+        
+        var res = '<div class="autocomplete-suggestion-chart" style="width: ' + chartWidth + '%">' +
+                      '<div class="autocomplete-suggestion-chart-proteins" style="width: ' + proteinsWidth + '%"></div>' +
+                      '<div class="autocomplete-suggestion-chart-fats" style="width: ' + fatsWidth + '%"></div>' +
+                   '</div>';
+                   
+        res += '<div class="autocomplete-suggestion-text">' + 
+                 suggestion.value.replace(new RegExp(pattern, 'gi'), '<strong>$1<\/strong>') + 
+                    ", " + suggestion.data.caloric + " ккал (Б: " + suggestion.data.proteins + 
+                    ", Ж: " + suggestion.data.fats + ", У: " + suggestion.data.carbohydrates + ")" + 
+               '</div>'
+        
+        return res;
+    },
+    onSelect: function (suggestion) {
+        addProductWindow.addProduct(suggestion.data);
+    }
+  });
+}
+
+var searchResults = {
+  offset: 0,
+  searchLimit: 5,
+  results: []
+}
+searchResults.containter = function() {
+  return $('.searchResults');
+}
+searchResults.template = function() {
+  return $('.searchResult.template');
+}
+searchResults.clear = function() {
+  searchResults.containter().find('.searchResult').remove();
+}
+searchResults.nextButton = function() {
+  return $('.nextSearch');
+}
+searchResults.show = function() {    
+  var clickFunction = function(i) {
+    return function(e) {
+        addProductWindow.addProduct(searchResults.results[i]);
+    }
+  }
+  
+  for (var i in searchResults.results) {
+    var product = searchResults.template().clone();
+    product.removeClass('template');
+    
+    $(product).find('.name').html(searchResults.results[i].name);
+    $(product).find('.weight').html(Math.floor(searchResults.results[i].weight));
+    $(product).find('.caloric').html(searchResults.results[i].caloric);
+    $(product).find('.proteins').html(searchResults.results[i].proteins);
+    $(product).find('.fats').html(searchResults.results[i].fats);
+    $(product).find('.carbohydrates').html(searchResults.results[i].carbohydrates);
+    $(product).find('.productId').html(searchResults.results[i].id);
+    
+    $(product).click(clickFunction(i));
+    
+    searchResults.containter().append(product);
+  }
+  
+  if (searchResults.results.length > 0) {
+    searchResults.nextButton().show();
+  } else {
+    searchResults.nextButton().hide();
+  }
+}
+searchResults.search = function(text, withOffset) {
+  var params = {
+      command: 'getFilteredProducts',
+      text: text,
+      limit: searchResults.searchLimit
+  };
+  
+  if (withOffset === true) {
+      params.offset = searchResults.offset;
+  } else {
+    searchResults.offset = 0;
+  }
+  
+  doPost('http://portion.su:8080/api', params, function(msg) {
+      if (msg.filteredProducts.length === 0) {
+          setStatus('О таких блюдах мы пока что не знаем');
+          return;
+      }
+      
+      searchResults.results = msg.filteredProducts;
+      searchResults.offset = msg.offset;
+      searchResults.clear();
+      searchResults.show();
+  });
 }
 
 $(document).ready(function() {
@@ -194,4 +366,21 @@ $(document).ready(function() {
   dayRation.lunch = new products('lunch', [{"name":"Борщ из свежей капусты с мясом","caloric":"63","proteins":"4.4","fats":"3.6","carbohydrates":"5.5","id":"363","weight":65.63648101538013},{"name":"Бекон","caloric":"500","proteins":"23","fats":"45","carbohydrates":"0","id":"322","weight":44.936001576823855},{"name":"Шоколад молочный","caloric":547,"proteins":6.9,"fats":35.7,"carbohydrates":52.4,"id":204,"weight":59.47353865825969},{"name":"Пирожное слоеное с яблоком","caloric":454,"proteins":5.7,"fats":25.6,"carbohydrates":52.7,"id":208,"weight":30.664388977387365}]);
   dayRation.dinner = new products('dinner', [{"name":"Салат Витаминный","caloric":"146","proteins":"1.4","fats":"13.4","carbohydrates":"5.8","id":"2100","weight":283.41117011067746},{"name":"Батончик Herbalife Протеиновый","caloric":383,"proteins":29,"fats":8.6,"carbohydrates":46,"id":296,"weight":48.62132940950675}]);
   dayRation.updateProductsWeight(dayRation.show);
+ 
+  setAutocomplete();
+  $('.accept').click(function(e) {
+    userParams.save(function() {
+      dayRation.updateProductsWeight(dayRation.show);
+    });
+  });
+  $('.add-product-containter').click(function(e) {
+    if (e.target !== $('.add-product-containter')[0]) { return true; }
+    addProductWindow.hide();
+  });
+  $('.searchButton').click(function(e) {
+      searchResults.search($('.search')[0].value);
+  });
+  $('.nextSearch').click(function(e) {
+      searchResults.search($('.search')[0].value, true);
+  });
 });
