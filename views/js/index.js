@@ -359,6 +359,62 @@ searchResults.search = function(text, withOffset) {
   });
 }
 
+var buyWindow = {};
+buyWindow.container = function() {
+  return $('.buy-containter');
+}
+buyWindow.show = function() {
+  sellers.show();
+  buyWindow.container().show();
+}
+buyWindow.hide = function() {
+  buyWindow.container().hide();
+}
+
+var sellers = {
+  sellers: []
+};
+sellers.container = function() {
+  return buyWindow.container().find('.sellers');
+}
+sellers.template = function() {
+  return $('.seller.template');
+}
+sellers.clear = function() {
+  sellers.container().find('.seller').remove();
+}
+sellers.setActive = function(i) {
+  if (sellers.active === i) {
+    return;
+  }
+  
+  sellers.active = i;
+  sellers.container().find('.seller.active').removeClass('active');
+  $(sellers.container().find('.seller')[i]).addClass('active');
+}
+sellers.show = function() {
+  var clickFunction = function(i) {
+    return function(e) {
+      sellers.setActive(i);
+    }
+  }
+  
+  sellers.clear();
+  for (var i in sellers.sellers) {
+    var seller = sellers.template().clone();
+    seller.removeClass('template');
+    
+    $(seller).find('.name').html(sellers.sellers[i].name);
+    $(seller).find('.address').html(sellers.sellers[i].address);
+    $(seller).find('.price').html(sellers.sellers[i].price);
+    
+    $(seller).click(clickFunction(i));
+    
+    sellers.container().append(seller);
+  }
+  sellers.setActive(0);
+}
+
 $(document).ready(function() {
   userParams.show();
   dayRation.breakfast_one = new products('breakfast_one', [{"name":"Яичница глазунья","caloric":"241","proteins":"15.9","fats":"19.3","carbohydrates":"1","id":"3398","weight":26.97},{"name":"Батончик мюсли Ego с клубникой в йогурте","caloric":418,"proteins":4,"fats":14.5,"carbohydrates":67.5,"id":309,"weight":127.68}]);
@@ -380,7 +436,34 @@ $(document).ready(function() {
   $('.searchButton').click(function(e) {
       searchResults.search($('.search')[0].value);
   });
+  $('#search').keydown(function(e) {
+    if (e.keyCode !== 13) {
+      return;
+    }
+    
+    searchResults.search($('.search')[0].value);
+  })
   $('.nextSearch').click(function(e) {
       searchResults.search($('.search')[0].value, true);
   });
+  $('.order-btn').click(function(e) {
+      buyWindow.show();
+  });
+  buyWindow.container().click(function(e) {
+      if (e.target !== buyWindow.container()[0]) { return true; }
+      buyWindow.hide();
+  });
+  sellers.sellers = [{
+    name: "Пятерочка",
+    address: "пискаревский проспект, 18",
+    price: 545
+  }, {
+    name: "Ламантин",
+    address: 'Пискаревский проспект, д.2к"Щ"',
+    price: 763
+  }, {
+    name: "Casual Cafe",
+    address: 'Пискаревский проспект, д.2к"Щ"',
+    price: 698
+  }];
 });

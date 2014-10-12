@@ -17,8 +17,11 @@
     src: url('../fonts/Arimo-Bold.ttf'); /* Путь к файлу со шрифтом */
 }
 
+.right {
+    float: right;
+}
+
 .user-params {
-  float: right;
   padding: 2em;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 2em;
@@ -244,4 +247,84 @@ body {
     float: right;
     cursor: pointer;
     display: none;
+}
+
+.buy-containter {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+}
+
+.buy {
+    position: fixed;
+    left: 15%;
+    top: 20%;
+    height: 50%;
+    width: 60%;
+    background-color: white;
+    padding: 1.5em;
+    border-radius: 2em;
+    
+    form {
+        float: right;
+    }
+    
+    .btn {
+        padding: 0.5em 2em;
+        background-color: #76B836;
+        border-radius: 5px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 5px rgba(0, 0, 0, 0.25);
+        color: white;
+        font-size: 0.9em;
+        font-weight: bolder;
+        cursor: pointer;
+        border: 0;
+    }
+}
+
+.order-container {
+    text-align: center;
+    margin-top: 2em;
+    padding: 1em;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 9em;
+    border-radius: 1em;
+    margin: 2em auto;
+}
+
+.order-btn {
+    padding: 0.5em 2em;
+    background-color: #76B836;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 5px rgba(0, 0, 0, 0.25);
+    color: white;
+    font-size: 0.9em;
+    font-weight: bolder;
+    cursor: pointer;
+    border: 0;
+}
+
+.seller {
+    margin-top: 0.5em;
+    padding: 0.2em;
+    border-radius: 0.2em;
+    width: 70%;
+    
+    .name {
+        font-weight: bold;
+    }
+}
+
+.seller:hover {
+    border: 1px dashed black;
+    cursor: pointer;
+}
+
+.seller.active {
+    background-color: rgb(255, 243, 172);
+    border: 1px solid black;
 }

@@ -10,17 +10,23 @@
   <script type="text/javascript" src="js/less.js"></script>
 </head>
 <body>
-  <div class="user-params">
-    <div class="inputs">
-      Возраст: <input type="number" name="age" id="age" value="25" /><br>
-      Рост (см): <input type="number" name="height" id="height" value="180" /><br>
-      Масса (кг): <input type="number" name="weight" id="weight" value="80" /><br>
+  <div class="right">
+    <div class="user-params">
+      <div class="inputs">
+        Возраст: <input type="number" name="age" id="age" value="25" /><br>
+        Рост (см): <input type="number" name="height" id="height" value="180" /><br>
+        Масса (кг): <input type="number" name="weight" id="weight" value="80" /><br>
+      </div>
+      Пол: <label for="radio-male"><input id="radio-male" type="radio" name="sex" value="male" checked/>Мужской</label>
+      <label for="radio-female"><input id="radio-female" type="radio" name="sex" value="female"/>Женский</label><br>
+      Активность: <input type="range" name="activity" value="1.4" min="1.2" max="1.9" step="0.01" /><br>
+      <div class="accept-container">
+        <button class="accept">Сохранить</button>
+      </div>
     </div>
-    Пол: <label for="radio-male"><input id="radio-male" type="radio" name="sex" value="male" checked/>Мужской</label>
-    <label for="radio-female"><input id="radio-female" type="radio" name="sex" value="female"/>Женский</label><br>
-    Активность: <input type="range" name="activity" value="1.4" min="1.2" max="1.9" step="0.01" /><br>
-    <div class="accept-container">
-      <button class="accept">Сохранить</button>
+    
+    <div class="order-container">
+      <input class="order-btn" type="button" value="Заказать" />
     </div>
   </div>
   
@@ -73,17 +79,24 @@
     </div>
   </div>
   
-  <form action='https://sp-money.yandex.ru/oauth/authorize'>
-    
-    %кнопка "купить"%
-    
-    <input type="hidden" name="client_id" value="3C8EB4377C987BA354A59F09A066375AEF4203E02EEDBFFB5B527EF99D1D7606"/>
-    <input type="hidden" name="response_type" value="code"/>
-    <input type="hidden" name="redirect_uri" value="http://portion.cloudapp.net:8080/ym-result"/>
-    <input type="hidden" name="scope" value="operation-history"/>
-    
-    <input class="auth btn" type="submit">Авторизация</input>
-  </form>
+  <div class="buy-containter">
+    <div class="buy">
+      <form action='https://sp-money.yandex.ru/oauth/authorize'>
+      
+        <input type="hidden" name="client_id" value="3C8EB4377C987BA354A59F09A066375AEF4203E02EEDBFFB5B527EF99D1D7606"/>
+        <input type="hidden" name="response_type" value="code"/>
+        <input type="hidden" name="redirect_uri" value="http://portion.cloudapp.net:8080/ym-result"/>
+        <input type="hidden" name="scope" value="operation-history"/>
+        
+        <input class="auth btn" type="submit" value="Купить" />
+      </form>
+      
+      <div class="sellers">
+        
+      </div>
+    </div>
+  </div>
+  
   <div class="status"> </div>
   <div class="product template">
     <span class="name"></span>, <span class="weight"></span> г.
@@ -91,6 +104,11 @@
   </div>
   <div class="searchResult template">
     <span class="name"></span>
+  </div>
+  <div class="seller template">
+    <div class="name"></div>
+    <div class="address"></div>
+    <div class="price-containter"><span class="price"></span> руб.</div>
   </div>
 </body>
 </html>
